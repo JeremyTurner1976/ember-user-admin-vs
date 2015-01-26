@@ -1,0 +1,580 @@
+﻿@{
+    ViewBag.Title = "Account Administration";
+}
+<div id="user-admin-app"></div>
+
+
+<script src="~/Scripts/vendor/ember/handlebars-v2.0.0.js"></script>
+<script src="~/Scripts/vendor/ember/ember-1.9.1.js"></script>
+<script src="~/Scripts/vendor/ember/ember-data.min.js"></script>
+
+@*<script src="~/Scripts/vendor/ember/handlebars-1.1.2.js"></script>
+    <script src="~/Scripts/vendor/ember/ember-1.4.0.js"></script>
+    <script src="~/Scripts/vendor/ember/ember-data.js"></script>*@
+
+
+<script src="~/Scripts/vendor/md5.js"></script>
+<script src="~/Scripts/vendor/moment/moment.js"></script>
+
+<script type="text/x-handlebars" data-template-name="application">
+    {{outlet}}
+</script>
+
+<script type="text/x-handlebars" data-template-name="index">
+    <h1>User Administration</h1>
+    <hr />
+    <p>
+        Select what you want to do from below...
+    </p>
+    <ul>
+        <li>{{#link-to 'users'}}User Administration{{/link-to}}</li>
+    </ul>
+</script>
+
+<script type="text/x-handlebars" data-template-name="users">
+    <h1>Last 20 Users</h1>
+    <table class="table table-striped">
+        <tr>
+            <th>User</th>
+            <th>Name</th>
+            <th>Member Since</th>
+        </tr>
+        <tr>
+            <td>{{#link-to 'user' 'robconery'}}<img src="https://avatars.githubusercontent.com/u/78586?" width="120" />{{/link-to}}</td>
+            <td>{{#link-to 'user' 'robconery'}}TEST{{/link-to}}</td>
+            <td>2 months ago</td>
+        </tr>
+    </table>
+    <p>
+        {{#link-to "index"}}Back{{/link-to}}
+    </p>
+</script>
+
+<script type="text/x-handlebars" data-template-name="user">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="well">
+                <p class="text-center">
+                    <img src="https://avatars.githubusercontent.com/u/78586?" width="120" />
+                </p>
+                <h4>TEST</h4>
+                <table class="table table-striped">
+                    <tr><td>Username:</td><td></td></tr>
+                    <tr><td>Twitter:</td><td></td></tr>
+                    <tr><td>Bio: </td><td></td></tr>
+                    <tr><td>Email: </td><td></td></tr>
+                </table>
+                <p>
+                    {{#link-to "users"}}Back{{/link-to}}
+                </p>
+            </div>
+        </div>
+        <div class="col-md-8">
+            {{outlet}}
+        </div>
+    </div>
+</script>
+
+<script type="text/x-handlebars" data-template-name="user/index">
+    <ol class="breadcrumb">
+        <li>{{#link-to 'index'}}Admin{{/link-to}}</li>
+        <li>{{#link-to 'users'}}Users{{/link-to}}</li>
+        <li class="active">Rob Conery</li>
+    </ol>
+    <hr />
+    <h2>Choose what you want to do:</h2>
+    <ul>
+        <li>{{#link-to 'user.editinfo'}}Edit Basic Info{{/link-to}}</li>
+        <li>{{#link-to 'user.editpassword'}}Change Password{{/link-to}}</li>
+        <li>{{#link-to 'user.editroles'}}Change User Roles{{/link-to}}</li>
+        <li>{{#link-to 'user.addnote'}}Add Note{{/link-to}}</li>
+    </ul>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Notes</h4>
+            <table class="table table-striped">
+                <tr>
+                    <th>Created</th>
+                    <th>Note</th>
+                </tr>
+                <tr>
+                    <td>4 days ago</td>
+                    <td>A Note</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <h4>Logs</h4>
+            <table class="table table-striped">
+                <tr>
+                    <th>Created</th>
+                    <th>Log</th>
+                </tr>
+                <tr>
+                    <td>2 days ago</td>
+                    <td>A Log</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/x-handlebars" id="user/editinfo">
+    <ol class="breadcrumb">
+        <li>{{#link-to 'index'}}Admin{{/link-to}}</li>
+        <li>{{#link-to 'users'}}Users{{/link-to}}</li>
+        <li>{{#link-to 'user.index'}}Rob Conery{{/link-to}}</li>
+        <li class="active">Basic Information</li>
+    </ol>
+
+    <h3>Basic Information</h3>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="UserName">User Name</label>
+            <div class="col-md-10">
+                <input id="UserName" name="UserName" type="text" class="form-control" data-val="true" data-val-required="This field is required.">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Email">Email</label>
+            <div class="col-md-10">
+                <input id="Email" name="Email" type="text" class="form-control" data-val="true" data-val-required="This field is required.">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="First">First</label>
+            <div class="col-md-10">
+                <input id="First" name="First" type="text" class="form-control" data-val="true" data-val-required="This field is required.">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Last">Last</label>
+            <div class="col-md-10">
+                <input id="Last" name="Last" type="text" class="form-control" data-val="true" data-val-required="This field is required.">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Twitter">Twitter</label>
+            <div class="col-md-10">
+                <input id="Twitter" name="Twitter" type="text" class="form-control" data-val="true" data-val-required="This field is required.">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Bio">Bio</label>
+            <div class="col-md-10">
+                <input id="Bio" name="Bio" type="text" class="form-control" data-val="true" data-val-required="This field is required.">
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <input type="submit" value="save" class="btn btn-success" />
+        </div>
+    </form>
+</script>
+
+<script type="text/x-handlebars" data-template-name="user/editroles">
+    <ol class="breadcrumb">
+        <li>{{#link-to 'index'}}Admin{{/link-to}}</li>
+        <li>{{#link-to 'users'}}Users{{/link-to}}</li>
+        <li>{{#link-to 'user.index'}}Rob Conery{{/link-to}}</li>
+        <li class="active">Change Roles</li>
+    </ol>
+
+    <h3>Roles</h3>
+    <form class="form-horizontal">
+        <div class="checkbox">
+            <label><input type="checkbox" />Admin</label>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox" />Role 1</label>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox" />Role 2</label>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-handlebars" data-template-name="user/editpassword">
+    <ol class="breadcrumb">
+        <li>{{#link-to 'index'}}Admin{{/link-to}}</li>
+        <li>{{#link-to 'users'}}Users{{/link-to}}</li>
+        <li>{{#link-to 'user.index'}}Rob Conery{{/link-to}}</li>
+        <li class="active">Change Password</li>
+    </ol>
+
+    <h3>Change Password</h3>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="OldPassword">Old Password</label>
+            <div class="col-md-10">
+                <input id="OldPassword" name="OldPassword" type="text" class="form-control" data-val="true" data-val-required="This field is required.">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="NewPassword">New Password</label>
+            <div class="col-md-10">
+                <input id="NewPassword" name="NewPassword" type="text" class="form-control" data-val="true" data-val-required="This field is required.">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Confirm">Confirm</label>
+            <div class="col-md-10">
+                <input id="Confirm" name="Confirm" type="text" class="form-control" data-val="true" data-val-required="This field is required.">
+            </div>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-handlebars" data-template-name="user/addnote">
+    <ol class="breadcrumb">
+        <li>{{#link-to 'index'}}Admin{{/link-to}}</li>
+        <li>{{#link-to 'users'}}Users{{/link-to}}</li>
+        <li>{{#link-to 'user.index'}}Rob Conery{{/link-to}}</li>
+        <li class="active">Add Note</li>
+    </ol>
+
+    <h3>Add A Note to {{user.name}}'s Account.</h3>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="NewNote">New Note</label>
+            <div class="col-md-10">
+                <textarea name="NewNote" id="NewNote" rows="5" class="form-control"></textarea>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <tr>
+                <th>Created</th>
+                <th>Note</th>
+            </tr>
+            <tr>
+                <td>5 days ago</td>
+                <td>A Note</td>
+            </tr>
+        </table>
+    </form>
+</script>
+
+
+<script type="text/javascript">
+    window.UserAdmin = Ember.Application.create({
+        rootElement: "#user-admin-app"
+    });
+
+    UserAdmin.Router.map(function () {
+        this.resource("users");
+        this.resource("user", { path: "users/:username" }, function () {
+            //auto creates a nested route to allow index
+            this.route("editinfo", { path: "editinfo" });
+            this.route("editroles", { path: "editroles" });
+            this.route("editpassword", { path: "editpassword" });
+            this.route("addnote", { path: "addnote" });
+        });
+    });
+
+    //notify json will be used on the page
+    UserAdmin.ApplicationAdapter = DS.FixtureAdapter.extend({});
+
+    UserAdmin.User = DS.Model.extend({
+        email: DS.attr("string"),
+        userName: DS.attr("string"),
+        first: DS.attr("string"),
+        last: DS.attr("string"),
+        bio: DS.attr("string"),
+        twitter: DS.attr("string"),
+        roles: DS.hasMany("role")
+    });
+
+    UserAdmin.Role = DS.Model.extend({
+        name: DS.attr("string"),
+        membership: DS.belongsTo("user")
+    });
+
+    UserAdmin.UsersRoute = Ember.Route.extend({
+        model: function() {
+            return this.store.findAll("user");
+        }
+    });
+
+
+    //copy/paste from the api, rename each to var [name]Fixtures = ...  , then place a ; instead of comma at the end
+
+        var usersFixtures = [
+            {
+                "id": "2467fbf0-3015-4ba4-90fc-00021d04f0b4",
+                "userName": "sonmez",
+                "email": "john.sonmez@gmail.com",
+                "first": "John",
+                "last": "Sonmez",
+                "bio": "Author at Pluralsight",
+                "twitter": "johnsonmez",
+                "notes": [],
+                "logs": [],
+                "membership": [],
+                "created_at": "2011-01-03T00:00:00"
+            },
+            {
+                "id": "2d07d0b7-86bd-46b1-89ab-0e71f0b6f122",
+                "userName": "shiftkey",
+                "email": "brendan.forster@github.com",
+                "first": "Brendan",
+                "last": "Forster",
+                "bio": "Developer at Github",
+                "twitter": "shiftkey",
+                "notes": [],
+                "logs": [],
+                "membership": [],
+                "created_at": "2011-01-03T00:00:00"
+            },
+            {
+                "id": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "userName": "robconery",
+                "email": "robconery@gmail.com",
+                "first": "Rob",
+                "last": "Conery",
+                "bio": "CTO of Little Debbie Snackcakes",
+                "twitter": "robconery",
+                "notes": [
+                    1,
+                    2,
+                    3
+                ],
+                "logs": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13
+                ],
+                "membership": [
+                    "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3|1"
+                ],
+                "created_at": "2001-04-12T00:00:00"
+            },
+            {
+                "id": "3f709e03-aa25-40f9-a49d-fd252c6fc0c7",
+                "userName": "jongalloway",
+                "email": "jongalloway@gmail.com",
+                "first": "Jon",
+                "last": "Galloway",
+                "bio": "Dance Instructor",
+                "twitter": "jongalloway",
+                "notes": [],
+                "logs": [],
+                "membership": [],
+                "created_at": "2001-01-01T00:00:00"
+            },
+            {
+                "id": "49bbf69b-97e1-4712-99d5-43b59dfb5fdd",
+                "userName": "haacked",
+                "email": "haacked@gmail.com",
+                "first": "Phil",
+                "last": "Haack",
+                "bio": "Developer at Github",
+                "twitter": "haacked",
+                "notes": [],
+                "logs": [],
+                "membership": [],
+                "created_at": "2006-07-03T00:00:00"
+            },
+            {
+                "id": "4a294b48-6806-48ee-9a55-84caa0dfb0ee",
+                "userName": "topfunky",
+                "email": "boss@topfunky.com",
+                "first": "Geoffrey",
+                "last": "Grosenbach",
+                "bio": "VP of Stuff at Pluralsight",
+                "twitter": "topfunky",
+                "notes": [],
+                "logs": [],
+                "membership": [],
+                "created_at": "2009-09-15T00:00:00"
+            },
+            {
+                "id": "4d54557f-9bfc-412c-b4bb-7ef3058da98d",
+                "userName": "kscott",
+                "email": "scott@odetocode.com",
+                "first": "K. Scott",
+                "last": "Galloway",
+                "bio": "Dance Instructor",
+                "twitter": "jongalloway",
+                "notes": [],
+                "logs": [],
+                "membership": [],
+                "created_at": "2001-01-01T00:00:00"
+            },
+            {
+                "id": "c7e316c2-199d-41b5-9078-26d869ff76e3",
+                "userName": "admin",
+                "email": "admin@example.com",
+                "first": "Big",
+                "last": "Admin Person",
+                "bio": null,
+                "twitter": null,
+                "notes": [],
+                "logs": [],
+                "membership": [
+                    "c7e316c2-199d-41b5-9078-26d869ff76e3|1"
+                ],
+                "created_at": "2015-01-18T14:54:17.467"
+            },
+            {
+                "id": "e4ba9f1a-0df2-426c-8879-7a694da74330",
+                "userName": "shanselman",
+                "email": "scott@hanselman.com",
+                "first": "Scott",
+                "last": "Hanselman",
+                "bio": "Community Lead at Microsoft",
+                "twitter": "shanselman",
+                "notes": [],
+                "logs": [],
+                "membership": [],
+                "created_at": "2001-01-01T00:00:00"
+            }
+        ];
+        var rolesFixtures = [
+            {
+                "id": "1",
+                "name": "Administrator",
+                "membership": [
+                    "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3|1",
+                    "c7e316c2-199d-41b5-9078-26d869ff76e3|1"
+                ]
+            }
+        ];
+        var notesFixtures = [
+            {
+                "id": 3,
+                "note": "Sent email regarding overpayment",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2014-02-12T00:00:00"
+            },
+            {
+                "id": 2,
+                "note": "Changed Avatar due to complaint",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2013-09-18T00:00:00"
+            },
+            {
+                "id": 1,
+                "note": "Set as Admin",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2012-12-01T00:00:00"
+            }
+        ];
+        var logsFixtures = [
+            {
+                "id": 1,
+                "entry": "Logged In",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2013-01-04T00:00:00"
+            },
+            {
+                "id": 2,
+                "entry": "Logged Out",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2012-12-17T00:00:00"
+            },
+            {
+                "id": 3,
+                "entry": "Logged In with Google",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2013-04-08T00:00:00"
+            },
+            {
+                "id": 4,
+                "entry": "Logged In Twitter",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2014-03-02T00:00:00"
+            },
+            {
+                "id": 5,
+                "entry": "Logged in with username/password",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2015-01-18T14:54:37.137"
+            },
+            {
+                "id": 6,
+                "entry": "Logged in with username/password",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2015-01-18T14:58:10.82"
+            },
+            {
+                "id": 7,
+                "entry": "Logged in with username/password",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2015-01-18T14:59:50.88"
+            },
+            {
+                "id": 8,
+                "entry": "Logged in with username/password",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2015-01-18T15:00:22.687"
+            },
+            {
+                "id": 9,
+                "entry": "Logged out",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2015-01-18T15:00:32.497"
+            },
+            {
+                "id": 10,
+                "entry": "Logged in with username/password",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2015-01-18T15:00:53.15"
+            },
+            {
+                "id": 11,
+                "entry": "Logged out",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2015-01-18T15:01:51.92"
+            },
+            {
+                "id": 12,
+                "entry": "Logged in with username/password",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2015-01-18T15:24:03.29"
+            },
+            {
+                "id": 13,
+                "entry": "Logged in with username/password",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "created_at": "2015-01-18T16:41:27.747"
+            }
+        ];
+        var membershipFixtures = [
+            {
+                "id": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3|1",
+                "user": "3a2f0df2-ca9d-49a3-bbc9-304bb82079a3",
+                "role": "1"
+            },
+            {
+                "id": "c7e316c2-199d-41b5-9078-26d869ff76e3|1",
+                "user": "c7e316c2-199d-41b5-9078-26d869ff76e3",
+                "role": "1"
+            }
+        ];
+
+    //constant data
+    UserAdmin.User.FIXTURES = usersFixtures;
+    UserAdmin.Role.FIXTURES = rolesFixtures;
+    UserAdmin.Note.FIXTURES = notesFixtures;
+    UserAdmin.Log.FIXTURES = logsFixtures;
+    UserAdmin.membership.FIXTURES = membershipFixtures;
+
+
+</script>
+
+
+@*@Scripts.Render("~/apps/useradmin")
+    @Scripts.Render("~/bundles/templates")*@

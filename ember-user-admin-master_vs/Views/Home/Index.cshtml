@@ -1,0 +1,264 @@
+﻿@{
+    ViewBag.Title = "Github Explorer";
+}
+
+<div id="github-app"></div>
+
+<script src="~/Scripts/vendor/ember/handlebars-v2.0.0.js"></script>
+<script src="~/Scripts/vendor/ember/ember-1.9.1.js"></script>
+<script src="~/Scripts/vendor/ember/ember-data.min.js"></script>
+
+@*<script src="~/Scripts/vendor/ember/handlebars-1.1.2.js"></script>
+<script src="~/Scripts/vendor/ember/ember-1.4.0.js"></script>
+<script src="~/Scripts/vendor/ember/ember-data.js"></script>*@
+
+<script src="~/Scripts/vendor/md5.js"></script>
+<script src="~/Scripts/vendor/moment/moment.js"></script>
+
+@Scripts.Render("~/apps/githubExplorer")
+@*@Scripts.Render("~/bundles/githubExplorer/templates")*@
+
+<script type="text/x-handlebars" data-template-name="application">
+
+    <div class="row">
+        <div class="col-md-12">
+            {{outlet}}
+        </div>
+    </div>
+
+</script>
+
+<script type="text/x-handlebars" data-template-name="index">
+    <h1>Github Explorer</h1>
+    <hr />
+
+    <p>This is the Github explorer for all of our favorite developers</p>
+    <ul>
+        {{#each item in model}}
+        <li>{{#link-to 'user' item.login}}{{item.name}}{{/link-to}}</li>
+        {{/each}}
+    </ul>
+    <p>
+        <button class="btn btn-success" {{action "clickMe"}}>Click Me</button>
+    </p>
+    <p>{{renderedOn}}</p>
+</script>
+
+
+<script type="text/x-handlebars" data-template-name="user">
+    <div class="row" style="padding-top:50px">
+        <div class="col-md-3">
+            <div class="well">
+                <p class="text-center">
+                    {{#link-to 'user' this}}<img {{bind-attr src=avatar_url}} style="width:140px" />{{/link-to}}
+                </p>
+                <h4>{{#link-to 'user' this}}{{name}}{{/link-to}}</h4>
+                <p>
+                    Company: {{company}}<br />
+                    Location: {{location}}<br />
+                    Email: {{email}}<br />
+                </p>
+                <hr />
+                <table class="table table-striped">
+                    <tr><td>Followers:</td><td>{{followers}}</td></tr>
+                    <tr><td>Repositories:</td><td>{{public_repos}}</td></tr>
+                    <tr><td>Gists:</td><td>{{public_gists}}</td></tr>
+                </table>
+                <p>
+                    {{#link-to 'index'}}Back{{/link-to}}
+                </p>
+            </div>
+        </div>
+        <div class="col-md-8">
+            {{outlet}}
+        </div>
+    </div>
+</script>
+
+<script type="text/x-handlebars" data-template-name="user/index">
+
+    <h2>{{name}}'s Github</h2>
+    <ul>
+        <li>{{#link-to 'repositories' this}}Repositories{{/link-to}}</li>
+    </ul>
+
+</script>
+
+<script type="text/x-handlebars" data-template-name="repositories">
+
+    <ol class="breadcrumb">
+        <li>{{#link-to 'index'}}Devs{{/link-to}}</li>
+        <li>{{#link-to 'user' user}}{{user.name}}{{/link-to}}</li>
+        <li class="active">Repositories</li>
+    </ol>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Repository</th>
+                <th>Description</th>
+            <tr>
+        </thead>
+        <tbody>
+            {{#each item in model}}
+            <tr>
+                <td><h4>{{#link-to 'repository' item}}{{item.name}}{{/link-to}}</h4></td>
+                <td>{{item.description}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+</script>
+
+<script type="text/x-handlebars" data-template-name="repository">
+    <ol class="breadcrumb">
+        <li>{{#link-to 'index'}}Devs{{/link-to}}</li>
+        <li>{{#link-to 'user' user}}{{user.name}}{{/link-to}}</li>
+        <li>{{#link-to 'repositories' user}}Repositories{{/link-to}}</li>
+        <li class="active">{{name}}</li>
+    </ol>
+
+    <h1>{{name}} Repo</h1>
+    <p>{{description}}</p>
+    <ul>
+        <li>Language: {{language}}</li>
+        <li>Watchers: {{watchers}}</li>
+        <li>Open Issues: {{open_issues}}</li>
+        <li>Clone: {{clone_url}}</li>
+        <li>Web:<a {{bind-attr href=html_url}} target="_blank">{{html_url}}</a></li>
+    </ul>
+    <hr />
+    {{#unless forked}}
+    <ul class="list-inline">
+        <li>{{#link-to 'issues'}}Issues{{/link-to}}</li>
+        <li>{{#link-to 'forks'}}Forks{{/link-to}}</li>
+        <li>{{#link-to 'commits'}}Commits{{/link-to}}</li>
+        <li>{{#link-to 'repository.newissue'}}New Issue{{/link-to}}</li>
+    </ul>
+    {{else}}
+    <p class="text-muted">
+        Forked {{fromDate created_at}}
+    </p>
+    {{/unless}}
+    {{outlet}}
+</script>
+
+<script type="text/x-handlebars" data-template-name="issues">
+    <h4>ISSUES</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Avatar</th>
+                <th>Title</th>
+            <tr>
+        </thead>
+        <tbody>
+            {{#each item in model}}
+            <tr>
+                <td><img {{bind-attr src=item.user.avatar_url}} style="width:100px" /></td>
+                <td>
+                    {{item.title}}
+                    <hr />
+                    <p class="text-muted">{{fromDate item.created_at}}</p>
+                </td>
+            </tr>
+            {{else}}
+            <tr>
+                <td>
+                    <p class="text-muted">No Issues</p>
+                </td>
+                <td></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/x-handlebars" data-template-name="forks">
+    <h4>FORKS</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Avatar</th>
+                <th>Full Name</th>
+            <tr>
+        </thead>
+        <tbody>
+            {{#each item in model}}
+            <tr>
+                <td><img {{bind-attr src=item.owner.avatar_url}} style="width:100px" /></td>
+                <td>
+                    {{item.full_name}}
+                    <hr />
+                    <p class="text-muted">{{fromDate item.created_at}}</p>
+                </td>
+            </tr>{{else}}
+            <tr>
+                <td>
+                    <p class="text-muted">No Forks</p>
+                </td>
+                <td></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/x-handlebars" data-template-name="commits">
+    <h4>COMMITS</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Avatar</th>
+                <th>Full Name</th>
+            <tr>
+        </thead>
+        <tbody>
+            {{#each item in model}}
+            <tr>
+                <td><img {{bind-attr src=item.author.avatar_url}} style="width:100px" /></td>
+                <td>
+                    <h5>Sha: {{item.sha}}</h5>
+                    <p>{{item.commit.message}}</p>
+                    <hr />
+                    <p class="text-muted">{{fromDate item.created_at}}</p>
+                </td>
+            </tr>{{else}}
+            <tr>
+                <td>
+                    <p class="text-muted">No Commits</p>
+                </td>
+                <td></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/x-handlebars" data-template-name="repository/newissue">
+    <h3>Create an Issue</h3>
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" name="title" id="new-issue-title" placeholder="Issue Title" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="body">Body</label>
+        <textarea name="title" id="new-issue-body" placeholder="Whats your issue?" rows="5" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-primary" {{action 'submitIssue'}}>Submit Issue</button>
+</script>
+
+
+
+
+
+
+
+
+
+

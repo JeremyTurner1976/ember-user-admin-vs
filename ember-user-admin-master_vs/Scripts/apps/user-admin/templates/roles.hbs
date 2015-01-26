@@ -1,0 +1,27 @@
+﻿<table class="table">
+    <tr>
+        <th>Roles</th>
+        <th>Action</th>
+    </tr>
+    {{#each}}
+    {{#if userIsAssigned}}
+    <tr class="alert alert-success">
+        <td>
+            <span class="glyphicon glyphicon-ok"></span> {{name}}
+        </td>
+        <td>
+            <a href="#" {{action removeRole}}>Revoke</a>
+        </td>
+    </tr>
+    {{else}}
+    <tr>
+        <td>
+            {{name}}
+        </td>
+        <td>
+            <a href="#" {{action assignRole}}>Assign</a>
+        </td>
+    </tr>
+    {{/if}}
+    {{/each}}
+</table>

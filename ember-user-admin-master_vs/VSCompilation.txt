@@ -1,0 +1,4 @@
+option handlebarsDotNet
+
+handleBarsHelper search, get asp net handlebar package
+allows bundled handlebars
